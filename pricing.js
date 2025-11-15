@@ -4,15 +4,12 @@ if ($('.toggle').length > 0) {
     $(this).next().slideToggle(500);
   });
 }
-// ناخد بيانات الفورم المخزنة
 const formData = JSON.parse(localStorage.getItem('formData'));
-
 if (!formData) {
   alert('Please make an appointment first!');
   window.location.href = '/appointment.html';
 }
 
-// نحدد كل زرار Order Now
 document.querySelectorAll('.product button').forEach(btn => {
   btn.addEventListener('click', async (e) => {
     e.preventDefault();
@@ -37,17 +34,10 @@ document.querySelectorAll('.product button').forEach(btn => {
         body: JSON.stringify(orderData)
       });
 
-      // 🔥 الجزء المهم: نشيك على الـ response قبل ما نحوله لـ JSON
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-
-      // نجيب الـ text الأول عشان نشوف إيه الراجع
       const responseText = await response.text();
-      console.log('Response text:', responseText);
 
       let data;
       try {
-        // نحاول نحوله لـ JSON
         data = JSON.parse(responseText);
       } catch (parseError) {
         console.error('Response is not JSON:', responseText);

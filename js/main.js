@@ -171,28 +171,30 @@ function toggleSubmitBtn() {
 }
 
 [Fname, Lname, email, phone, message].forEach(input => {
-  input.addEventListener('input', toggleSubmitBtn);
-});
-
-btnSubmit.disabled = true;
-console.log(btnSubmit);
-
-btnSubmit.addEventListener('click', function (e) {
-  e.preventDefault();
-
-  if (validateForm()) {
-    const formData = {
-      firstName: Fname.value.trim(),
-      lastName: Lname.value.trim(),
-      email: email.value.trim(),
-      phone: phone.value.trim(),
-      message: message.value.trim()
-    };
-
-    localStorage.setItem('formData', JSON.stringify(formData));
-    alert("Saved Successfully!");
-    window.location.href = "pricing.html"
-
+  if (input) {
+    input.addEventListener('input', toggleSubmitBtn);
   }
 });
+
+if (btnSubmit) {
+  btnSubmit.disabled = true;
+
+  btnSubmit.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    if (validateForm()) {
+      const formData = {
+        firstName: Fname ? Fname.value.trim() : '',
+        lastName: Lname ? Lname.value.trim() : '',
+        email: email ? email.value.trim() : '',
+        phone: phone ? phone.value.trim() : '',
+        message: message ? message.value.trim() : ''
+      };
+
+      localStorage.setItem('formData', JSON.stringify(formData));
+      alert("Saved Successfully!");
+      window.location.href = "pricing.html";
+    }
+  });
+}
 
