@@ -1,8 +1,8 @@
 if (window.location.pathname.includes("pricing.html")) {
-  const formData = localStorage.getItem('formData');
-  if (!formData) {
-    window.location.href = "appointment.html";
-  }
+    const formData = localStorage.getItem('formData');
+    if (!formData) {
+        window.location.href = "appointment.html";
+    }
 }
 
 // Initialize Embla Carousel with Autoplay
@@ -146,7 +146,7 @@ if ($('.toggle').length > 0) {
 
 //  Appointment
 const Fname = document.getElementById('Fname');
-const Lname = document.getElementById('Lname');
+const Lname = document.getElementById('Lname'); 
 const email = document.getElementById('Email');
 const phone = document.getElementById('Phone');
 const message = document.getElementById('message');
@@ -167,7 +167,7 @@ function validateForm() {
     isValidFname &&
     isValidLname &&
     isValidEmail &&
-    isValidPhone
+    isValidPhone 
   );
 }
 
