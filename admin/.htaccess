@@ -1,0 +1,10 @@
+# Protect admin directory
+AuthType Basic
+AuthName "Zirkona Lab Admin Area"
+AuthUserFile /path/to/.htpasswd
+Require valid-user
+
+# Alternative: Simple password protection
+<Files "orders.php">
+    # You can add password protection here if needed
+</Files>

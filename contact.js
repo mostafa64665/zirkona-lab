@@ -31,11 +31,14 @@ if (contactForm) {
     btn.textContent = 'جاري الإرسال...';
 
     try {
-      // Try different API endpoints (PHP and Node.js)
+      // Try different API endpoints (PHP SMTP first, then others)
       const endpoints = [
+        '/api/send-contact-smtp.php',
         '/api/send-contact.php',
         '/api/send-contact', 
+        './api/send-contact-smtp.php',
         './api/send-contact.php', 
+        'api/send-contact-smtp.php',
         'api/send-contact.php'
       ];
       let response = null;

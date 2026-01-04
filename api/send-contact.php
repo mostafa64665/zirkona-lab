@@ -77,10 +77,16 @@ try {
 
 // Always log to file as backup
 $logFile = 'contact_log.txt';
-$logEntry = date('Y-m-d H:i:s') . " - Contact from: " . $name . " (" . $email . ")\n";
+$logEntry = "=== NEW CONTACT MESSAGE ===\n";
+$logEntry .= "Date: " . date('Y-m-d H:i:s') . "\n";
+$logEntry .= "Name: " . $name . "\n";
+$logEntry .= "Email: " . $email . "\n";
 $logEntry .= "Phone: " . ($phone ?: 'N/A') . "\n";
 $logEntry .= "Message: " . $message . "\n";
-$logEntry .= str_repeat('-', 50) . "\n\n";
+$logEntry .= "Email Status: " . ($mailSent ? 'Sent Successfully' : 'Failed to Send') . "\n";
+$logEntry .= "Server: " . ($_SERVER['SERVER_SOFTWARE'] ?? 'Unknown') . "\n";
+$logEntry .= "IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'Unknown') . "\n";
+$logEntry .= str_repeat('=', 60) . "\n\n";
 
 try {
     file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);

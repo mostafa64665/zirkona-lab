@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الطلبات - Zirkona Lab</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            direction: rtl;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1d3557;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #457b9d;
+            border-bottom: 2px solid #a8dadc;
+            padding-bottom: 10px;
+        }
+        .log-content {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+        }
+        .no-data {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+        .refresh-btn {
+            background: #457b9d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        .refresh-btn:hover {
+            background: #1d3557;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #457b9d, #1d3557);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 إدارة الطلبات - Zirkona Lab</h1>
+        
+        <?php
+        $ordersFile = '../api/orders_log.txt';
+        $contactFile = '../api/contact_log.txt';
+        
+        // Count orders and contacts
+        $orderCount = 0;
+        $contactCount = 0;
+        
+        if (file_exists($ordersFile)) {
+            $orderContent = file_get_contents($ordersFile);
+            $orderCount = substr_count($orderContent, 'New Order');
+        }
+        
+        if (file_exists($contactFile)) {
+            $contactContent = file_get_contents($contactFile);
+            $contactCount = substr_count($contactContent, 'Contact from:');
+        }
+        ?>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $orderCount; ?></div>
+                <div>إجمالي الطلبات</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $contactCount; ?></div>
+                <div>رسائل التواصل</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?php echo date('Y-m-d'); ?></div>
+                <div>تاريخ اليوم</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📋 سجل الطلبات</h2>
+            <button class="refresh-btn" onclick="location.reload()">تحديث</button>
+            <div class="log-content">
+                <?php
+                if (file_exists($ordersFile)) {
+                    $content = file_get_contents($ordersFile);
+                    if (!empty($content)) {
+                        echo htmlspecialchars($content);
+                    } else {
+                        echo '<div class="no-data">لا توجد طلبات حتى الآن</div>';
+                    }
+                } else {
+                    echo '<div class="no-data">ملف الطلبات غير موجود</div>';
+                }
+                ?>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📩 سجل رسائل التواصل</h2>
+            <button class="refresh-btn" onclick="location.reload()">تحديث</button>
+            <div class="log-content">
+                <?php
+                if (file_exists($contactFile)) {
+                    $content = file_get_contents($contactFile);
+                    if (!empty($content)) {
+                        echo htmlspecialchars($content);
+                    } else {
+                        echo '<div class="no-data">لا توجد رسائل تواصل حتى الآن</div>';
+                    }
+                } else {
+                    echo '<div class="no-data">ملف رسائل التواصل غير موجود</div>';
+                }
+                ?>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🔧 معلومات النظام</h2>
+            <div class="log-content">
+PHP Version: <?php echo phpversion(); ?>
+
+Server Software: <?php echo $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown'; ?>
+
+Mail Function: <?php echo function_exists('mail') ? 'Available' : 'Not Available'; ?>
+
+Current Time: <?php echo date('Y-m-d H:i:s'); ?>
+
+Orders File: <?php echo file_exists($ordersFile) ? 'Exists' : 'Not Found'; ?>
+
+Contact File: <?php echo file_exists($contactFile) ? 'Exists' : 'Not Found'; ?>
+
+File Permissions: <?php echo is_writable('../api/') ? 'Writable' : 'Not Writable'; ?>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

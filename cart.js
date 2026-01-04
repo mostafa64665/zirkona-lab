@@ -145,11 +145,14 @@
     btn.textContent = 'جاري إرسال الطلب...';
 
     try {
-      // Try different API endpoints (PHP and Node.js)
+      // Try different API endpoints (PHP SMTP first, then others)
       const endpoints = [
+        '/api/send-order-smtp.php',
         '/api/send-order.php',
         '/api/send-order', 
+        './api/send-order-smtp.php',
         './api/send-order.php',
+        'api/send-order-smtp.php',
         'api/send-order.php'
       ];
       let success = false;

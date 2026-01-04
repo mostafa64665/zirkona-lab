@@ -123,15 +123,24 @@ try {
     $errorMessage = $e->getMessage();
 }
 
-// Method 2: Always log to file as backup
+// Always log to file as backup
 $logFile = 'orders_log.txt';
-$logEntry = date('Y-m-d H:i:s') . " - " . $subject . "\n";
-$logEntry .= "Customer: " . $name . " (" . $email . ", " . $phone . ")\n";
-$logEntry .= "Products: " . count($products) . " items, Total: " . $totalAmount . " SAR\n";
+$logEntry = "=== NEW ORDER ===\n";
+$logEntry .= "Date: " . date('Y-m-d H:i:s') . "\n";
+$logEntry .= "Subject: " . $subject . "\n";
+$logEntry .= "Customer: " . $name . "\n";
+$logEntry .= "Email: " . $email . "\n";
+$logEntry .= "Phone: " . $phone . "\n";
+$logEntry .= "Products Count: " . count($products) . "\n";
+$logEntry .= "Total Amount: " . $totalAmount . " SAR\n";
+$logEntry .= "\nProducts Details:\n";
 foreach ($products as $product) {
-    $logEntry .= "- " . $product['name'] . " x" . $product['quantity'] . " = " . ($product['price'] * $product['quantity']) . " SAR\n";
+    $logEntry .= "- " . $product['name'] . " (Qty: " . $product['quantity'] . ", Unit Price: " . $product['price'] . " SAR, Total: " . ($product['price'] * $product['quantity']) . " SAR)\n";
 }
-$logEntry .= str_repeat('-', 50) . "\n\n";
+$logEntry .= "\nEmail Status: " . ($emailSent ? 'Sent Successfully' : 'Failed to Send') . "\n";
+$logEntry .= "Server: " . ($_SERVER['SERVER_SOFTWARE'] ?? 'Unknown') . "\n";
+$logEntry .= "IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'Unknown') . "\n";
+$logEntry .= str_repeat('=', 60) . "\n\n";
 
 try {
     file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
