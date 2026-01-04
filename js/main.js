@@ -140,7 +140,22 @@ window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem('formData');
   localStorage.removeItem('orderData');
   localStorage.removeItem('zirkonaCart');
+  
+  // Initialize cart badge
+  updateCartBadge();
 });
+
+// Cart badge functionality for all pages
+function updateCartBadge() {
+  const cart = JSON.parse(localStorage.getItem('zirkonaCart')) || [];
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const badge = document.querySelector('.cart-badge');
+  
+  if (badge) {
+    badge.textContent = totalItems;
+    badge.style.display = totalItems > 0 ? 'flex' : 'none';
+  }
+}
 
 // Appointment form handling
 const Fname = document.getElementById('Fname');

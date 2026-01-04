@@ -47,12 +47,73 @@ function saveOrderData() {
 
 function addToCart(name, price, category) {
     const existingItem = cart.find(item => item.name === name);
-    if (existingItem) existingItem.quantity += 1;
-    else cart.push({ name, price, quantity: 1, category });
+    if (existingItem) {
+        existingItem.quantity += 1;
+        showNotification(`تم زيادة كمية "${name}" في السلة!`, 'success');
+    } else {
+        cart.push({ name, price, quantity: 1, category });
+        showNotification(`تم إضافة "${name}" للسلة!`, 'success');
+    }
 
     localStorage.setItem('zirkonaCart', JSON.stringify(cart));
     saveOrderData();
-    alert('تم إضافة المنتج للسلة!');
+    updateCartBadge();
+}
+
+// Show notification popup
+function showNotification(message, type = 'success') {
+    // Remove existing notification
+    const existing = document.querySelector('.notification-popup');
+    if (existing) existing.remove();
+
+    // Create notification
+    const notification = document.createElement('div');
+    notification.className = `notification-popup fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ${
+        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+    }`;
+    notification.innerHTML = `
+        <div class="flex items-center gap-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>${message}</span>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+
+    // Animate out
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Update cart badge in navigation
+function updateCartBadge() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    let badge = document.querySelector('.cart-badge');
+    
+    if (!badge) {
+        // Create badge if it doesn't exist
+        const cartLink = document.querySelector('a[href="cart.html"]');
+        if (cartLink) {
+            badge = document.createElement('span');
+            badge.className = 'cart-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center';
+            cartLink.style.position = 'relative';
+            cartLink.appendChild(badge);
+        }
+    }
+    
+    if (badge) {
+        badge.textContent = totalItems;
+        badge.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
 }
 
 document.querySelectorAll('.order-btn').forEach(button => {
@@ -62,6 +123,11 @@ document.querySelectorAll('.order-btn').forEach(button => {
         const category = button.dataset.category;
         addToCart(name, price, category);
     });
+});
+
+// Initialize cart badge on page load
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartBadge();
 });
 
 

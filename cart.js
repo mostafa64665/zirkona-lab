@@ -123,7 +123,7 @@
     const formData = JSON.parse(localStorage.getItem('formData')) || {};
 
     if (!cart.length) {
-      alert('Your cart is empty!');
+      alert('سلة المشتريات فارغة!');
       return;
     }
 
@@ -141,32 +141,71 @@
     console.log("Order data being sent:", orderData);
 
     const btn = e.currentTarget;
+    const originalText = btn.textContent;
     btn.disabled = true;
-    btn.textContent = 'Sending Orders...';
+    btn.textContent = 'جاري إرسال الطلب...';
 
     try {
-      await fetch('/api/send-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-      })
-      .then(res => res.json().catch(() => null))
-      .then(data => {
-        alert(`✅ Order sent successfully with ${cart.length} products!`);
-        cart = [];
-        localStorage.setItem('zirkonaCart', JSON.stringify(cart));
-        updateCart();
-        if (data && data.error) console.error('Server-side issue:', data.error);
-      })
-      .catch(err => {
-        console.error('Fetch error (ignored):', err);
-        alert(`✅ Order sent successfully with ${cart.length} products!`);
-        cart = [];
-        localStorage.setItem('zirkonaCart', JSON.stringify(cart));
-        updateCart();
-      });
+      // Try different API endpoints
+      const endpoints = ['/api/send-order', './api/send-order', 'api/send-order'];
+      let success = false;
+      let lastError = null;
+
+      for (const endpoint of endpoints) {
+        try {
+          console.log(`Trying endpoint: ${endpoint}`);
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+          });
+          
+          if (response.ok) {
+            success = true;
+            break;
+          }
+        } catch (err) {
+          console.log(`Endpoint ${endpoint} failed:`, err);
+          lastError = err;
+          continue;
+        }
+      }
+
+      if (success) {
+        alert(`✅ تم إرسال الطلب بنجاح مع ${cart.length} منتجات!\nسنتواصل معك قريباً على:\n📧 ${orderData.email}\n📞 ${orderData.phone}`);
+      } else {
+        // Fallback: Show contact info if API fails
+        const fallbackMessage = `
+⚠️ تم حفظ طلبك محلياً، لكن لم نتمكن من إرساله للخادم.
+
+يرجى التواصل معنا مباشرة لتأكيد الطلب:
+📞 الهاتف: 0551611189 أو 0550911183
+📧 البريد: zirkonalab@gmail.com
+
+تفاصيل طلبك:
+👤 الاسم: ${orderData.name}
+📧 البريد: ${orderData.email}
+📞 الهاتف: ${orderData.phone}
+🛒 المنتجات: ${cart.length} منتج
+💰 المجموع: ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)} ريال
+        `;
+        
+        alert(fallbackMessage);
+      }
+
+      // Clear cart regardless of API success
+      cart = [];
+      localStorage.setItem('zirkonaCart', JSON.stringify(cart));
+      updateCart();
+      
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      alert('❌ حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.');
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Proceed to Checkout';
+      btn.textContent = originalText;
     }
   });
