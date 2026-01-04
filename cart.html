@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | Zirkona - Premium Dental Laboratory</title>
+    <link rel="stylesheet" href="assets/css/output.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        button{
+            cursor: pointer;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #14346f 0%, #3B6B41 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .cart-item {
+            transition: all 0.3s ease;
+        }
+
+        .cart-item:hover {
+            box-shadow: 0 10px 30px rgba(20, 52, 111, 0.15);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-brand-cream">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <img src="images/9.webp" class="w-32" alt="zirkona Logo">
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-brand-navy transition">Home</a>
+                    <a href="about.html" class="text-gray-700 hover:text-brand-navy transition">About</a>
+                    <a href="pricing.html" class="text-gray-700 hover:text-brand-navy transition">Price</a>
+                    <a href="index.html#services" class="text-gray-700 hover:text-brand-navy transition">Services</a>
+                    <a href="index.html#Testimonial"
+                        class="text-gray-700 hover:text-brand-navy transition">Testimonials</a>
+                    <a href="cart.html" class="text-gray-700 hover:text-brand-navy transition">cart</a>
+
+                    <a href="appointment.html"
+                        class="bg-brand-navy text-white px-6 py-2 rounded-full hover:bg-brand-green transition">
+                        Make an Appointment
+                    </a>
+                </div>
+
+                <button data-mobile-menu-toggle id="mobile-toggle"
+                    class="md:hidden flex items-center justify-center w-10 h-10 rounded-md  text-gray-700 hover:bg-gray-100 focus:outline-none transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" data-mobile-menu class="md:hidden hidden bg-white border-t border-gray-200 shadow-md ">
+            <div class="flex flex-col space-y-3 py-4 px-6">
+                <a href="index.html" class="text-gray-700 hover:text-brand-navy transition">Home</a>
+                <a href="about.html" class="text-gray-700 hover:text-brand-navy transition">About</a>
+                <a href="pricing.html" class="text-gray-700 hover:text-brand-navy transition">Price</a>
+                <a href="index.html#services" class="text-gray-700 hover:text-brand-navy transition">Services</a>
+                <a href="index.html#Testimonial" class="text-gray-700 hover:text-brand-navy transition">Testimonials</a>
+                <a href="cart.html" class="text-gray-700 hover:text-brand-navy transition">cart</a>
+                <a href="appointment.html"
+                    class="bg-brand-navy text-white px-6 py-2 rounded-full text-center hover:bg-brand-green transition">
+                    Make an Appointment
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative bg-gradient-to-br from-brand-navy via-brand-green to-brand-navy text-white py-20">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0 bg-center bg-cover bg-fixed"
+                style="background-image: url('images/Doctor.webp');"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center">
+                <nav class="flex justify-center mb-6" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-2">
+                        <li class="inline-flex items-center">
+                            <a href="index.html" class="text-brand-gold hover:text-white transition">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                                </svg>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 text-brand-gold" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span class="ml-2 text-white font-medium">Shopping Cart</span>
+                            </div>
+                        </li>
+                    </ol>
+                </nav>
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">Your Cart</h1>
+                <p class="text-xl text-gray-200 max-w-2xl mx-auto">Review your selected items before checkout</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Section -->
+    <section class="py-20 bg-gradient-to-br from-brand-cream via-white to-brand-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="grid lg:grid-cols-3 gap-8">
+
+                <!-- Cart Items -->
+                <div class="lg:col-span-2 space-y-8">
+
+                    <!-- Title + Clear Button -->
+                    <div class="flex items-center justify-between">
+                        <h2
+                            class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-navy to-brand-green">
+                            Cart Items
+                        </h2>
+
+                        <button onclick="clearCart()"
+                            class="text-brand-burgundy hover:text-brand-navy transition font-semibold text-sm tracking-wide">
+                            Clear All
+                        </button>
+                    </div>
+
+                    <!-- Empty Cart Message -->
+                    <div id="empty-cart"
+                        class="bg-white rounded-3xl p-10 sm:p-14 text-center shadow-xl border border-brand-gold/20">
+                        <div class="flex justify-center mb-6">
+                            <svg class="w-14 h-14 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-3">Your cart is empty</h3>
+                        <p class="text-gray-600 mb-8">Start adding items from our services to get started</p>
+
+                        <a href="pricing.html"
+                            class="inline-block bg-gradient-to-r from-brand-navy to-brand-green text-white px-8 py-3 rounded-full font-semibold shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+                            Browse Services
+                        </a>
+                    </div>
+
+                    <!-- Populated Cart Items -->
+                    <div id="cart-items" class="space-y-4">
+                        <!-- Injected by JS -->
+                    </div>
+
+                </div>
+
+
+                <!-- Order Summary -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-brand-gold/20 sticky top-24">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Order Summary</h3>
+
+                        <div class="space-y-4 mb-6">
+                            <div class="flex justify-between text-gray-600 mb-2">
+                                <span>Subtotal</span>
+                                <span class="font-semibold" id="subtotal">0 SAR</span>
+                            </div>
+
+
+
+                            <div class="border-t border-gray-200 pt-4">
+                                <div class="flex justify-between text-xl font-bold text-gray-900">
+                                    <span>Total</span>
+                                    <span class="text-brand-navy" id="total">0 SAR</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Checkout Button -->
+                        <button class="w-full" id="checkout-btn"  class="block w-full bg-gradient-to-r from-brand-navy to-brand-green text-white text-center py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] mb-4">
+                           
+                            Proceed to Checkout
+                        </button>
+
+                        <a href="pricing.html"
+                            class="block w-full text-center text-brand-navy hover:text-brand-green transition py-3 font-semibold">
+                            Continue Shopping
+                        </a>
+
+                        <!-- Trust Badges -->
+                        <div class="mt-8 pt-6 border-t border-gray-200">
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <svg class="w-8 h-8 mx-auto mb-2 text-brand-green" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                    <p class="text-xs text-gray-600">Secure Payment</p>
+                                </div>
+                                <div>
+                                    <svg class="w-8 h-8 mx-auto mb-2 text-brand-navy" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <p class="text-xs text-gray-600">Fast Delivery</p>
+                                </div>
+                                <div>
+                                    <svg class="w-8 h-8 mx-auto mb-2 text-brand-burgundy" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <p class="text-xs text-gray-600">Quality Assured</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4 text-brand-gold">Zirkona</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Your trusted partner in dental excellence. Providing premium laboratory services with precision,
+                        quality, and innovation.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4 text-brand-gold">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-brand-gold transition">Home</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-brand-gold transition">About Us</a>
+                        </li>
+                        <li><a href="pricing.html" class="text-gray-400 hover:text-brand-gold transition">Pricing</a>
+                        </li>
+                        <li><a href="cart.html" class="text-gray-400 hover:text-brand-gold transition">Cart</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4 text-brand-gold">Contact</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li>Prince Abdulaziz St, Al Malqa</li>
+                        <li>contact@zirkona.com</li>
+                        <li>0551611189 • 0550911183</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-gray-400 text-sm">© 2025 Zirkona Dental Laboratory. All Rights Reserved.</p>
+                    <div class="flex gap-6 text-sm">
+                        <a href="#" class="text-gray-400 hover:text-brand-gold transition">Privacy Policy</a>
+                        <a href="#" class="text-gray-400 hover:text-brand-gold transition">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="cart.js"></script>
+</body>
+
+</html>

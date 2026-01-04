@@ -1,9 +1,4 @@
-if (window.location.pathname.includes("pricing.html")) {
-    const formData = localStorage.getItem('formData');
-    if (!formData) {
-        window.location.href = "appointment.html";
-    }
-}
+
 
 // Initialize Embla Carousel with Autoplay
 window.addEventListener('load', () => {
@@ -104,14 +99,12 @@ btn.addEventListener('click', () => {
   menu.classList.toggle('hidden');
 });
 
-// optional: close menu when clicking a link
 document.querySelectorAll('#mobile-menu .mobile-link').forEach(link => {
   link.addEventListener('click', () => menu.classList.add('hidden'));
 });
 
 
 
-// Add loading animation for images
 document.querySelectorAll('img[loading="lazy"]').forEach(img => {
   img.addEventListener('load', function () {
     this.classList.add('loaded');
@@ -139,9 +132,14 @@ document.querySelectorAll('section').forEach(section => {
 
 
 
-//  Appointment
+window.addEventListener('DOMContentLoaded', () => {
+  localStorage.removeItem('formData');
+  localStorage.removeItem('orderData');
+  localStorage.removeItem('zirkonaCart');
+});
+
 const Fname = document.getElementById('Fname');
-const Lname = document.getElementById('Lname'); 
+const Lname = document.getElementById('Lname');
 const email = document.getElementById('Email');
 const phone = document.getElementById('Phone');
 const message = document.getElementById('message');
@@ -151,18 +149,12 @@ const nameRegex = /^[A-Za-z]{2,}$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^(\+?\d{1,3}[- ]?)?\d{5,12}$/;
 
-
 function validateForm() {
-  const isValidFname = nameRegex.test(Fname.value.trim());
-  const isValidLname = nameRegex.test(Lname.value.trim());
-  const isValidEmail = emailRegex.test(email.value.trim());
-  const isValidPhone = phoneRegex.test(phone.value.trim());
-
   return (
-    isValidFname &&
-    isValidLname &&
-    isValidEmail &&
-    isValidPhone 
+    nameRegex.test(Fname.value.trim()) &&
+    nameRegex.test(Lname.value.trim()) &&
+    emailRegex.test(email.value.trim()) &&
+    phoneRegex.test(phone.value.trim())
   );
 }
 
@@ -171,9 +163,7 @@ function toggleSubmitBtn() {
 }
 
 [Fname, Lname, email, phone, message].forEach(input => {
-  if (input) {
-    input.addEventListener('input', toggleSubmitBtn);
-  }
+  if (input) input.addEventListener('input', toggleSubmitBtn);
 });
 
 if (btnSubmit) {
@@ -181,20 +171,22 @@ if (btnSubmit) {
 
   btnSubmit.addEventListener('click', function (e) {
     e.preventDefault();
+    if (!validateForm()) return;
 
-    if (validateForm()) {
-      const formData = {
-        firstName: Fname ? Fname.value.trim() : '',
-        lastName: Lname ? Lname.value.trim() : '',
-        email: email ? email.value.trim() : '',
-        phone: phone ? phone.value.trim() : '',
-        message: message ? message.value.trim() : ''
-      };
+    localStorage.removeItem('formData');
+    localStorage.removeItem('orderData');
+    localStorage.removeItem('zirkonaCart');
 
-      localStorage.setItem('formData', JSON.stringify(formData));
-      alert("Saved Successfully!");
-      window.location.href = "pricing.html";
-    }
+    const formData = {
+      firstName: Fname.value.trim(),
+      lastName: Lname.value.trim(),
+      email: email.value.trim(),
+      phone: phone.value.trim(),
+      message: message.value.trim()
+    };
+
+    localStorage.setItem('formData', JSON.stringify(formData));
+    alert("Saved Successfully!");
+    window.location.href = "pricing.html";
   });
 }
-
