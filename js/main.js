@@ -92,16 +92,20 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
+// Mobile menu functionality
 const btn = document.getElementById('mobile-toggle');
 const menu = document.getElementById('mobile-menu');
 
-btn.addEventListener('click', () => {
-  menu.classList.toggle('hidden');
-});
+if (btn && menu) {
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+  });
 
-document.querySelectorAll('#mobile-menu .mobile-link').forEach(link => {
-  link.addEventListener('click', () => menu.classList.add('hidden'));
-});
+  // Close menu when clicking on links
+  document.querySelectorAll('#mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => menu.classList.add('hidden'));
+  });
+}
 
 
 
@@ -138,6 +142,7 @@ window.addEventListener('DOMContentLoaded', () => {
   localStorage.removeItem('zirkonaCart');
 });
 
+// Appointment form handling
 const Fname = document.getElementById('Fname');
 const Lname = document.getElementById('Lname');
 const email = document.getElementById('Email');
@@ -145,34 +150,54 @@ const phone = document.getElementById('Phone');
 const message = document.getElementById('message');
 const btnSubmit = document.getElementById('btnSubmit');
 
-const nameRegex = /^[A-Za-z]{2,}$/;
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^(\+?\d{1,3}[- ]?)?\d{5,12}$/;
+// Only run appointment form code if elements exist
+if (Fname && Lname && email && phone && btnSubmit) {
+  const nameRegex = /^[A-Za-z\u0600-\u06FF\s]{2,}$/; // Allow Arabic names
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRegex = /^(\+?\d{1,3}[- ]?)?\d{5,12}$/;
 
-function validateForm() {
-  return (
-    nameRegex.test(Fname.value.trim()) &&
-    nameRegex.test(Lname.value.trim()) &&
-    emailRegex.test(email.value.trim()) &&
-    phoneRegex.test(phone.value.trim())
-  );
-}
+  function validateForm() {
+    const firstNameValid = Fname.value.trim().length >= 2;
+    const lastNameValid = Lname.value.trim().length >= 2;
+    const emailValid = emailRegex.test(email.value.trim());
+    const phoneValid = phoneRegex.test(phone.value.trim());
+    
+    return firstNameValid && lastNameValid && emailValid && phoneValid;
+  }
 
-function toggleSubmitBtn() {
-  btnSubmit.disabled = !validateForm();
-}
+  function toggleSubmitBtn() {
+    const isValid = validateForm();
+    btnSubmit.disabled = !isValid;
+    
+    if (isValid) {
+      btnSubmit.style.opacity = '1';
+      btnSubmit.style.cursor = 'pointer';
+    } else {
+      btnSubmit.style.opacity = '0.65';
+      btnSubmit.style.cursor = 'not-allowed';
+    }
+  }
 
-[Fname, Lname, email, phone, message].forEach(input => {
-  if (input) input.addEventListener('input', toggleSubmitBtn);
-});
+  // Add event listeners for real-time validation
+  [Fname, Lname, email, phone].forEach(input => {
+    if (input) {
+      input.addEventListener('input', toggleSubmitBtn);
+      input.addEventListener('blur', toggleSubmitBtn);
+    }
+  });
 
-if (btnSubmit) {
-  btnSubmit.disabled = true;
+  // Initial state
+  toggleSubmitBtn();
 
   btnSubmit.addEventListener('click', function (e) {
     e.preventDefault();
-    if (!validateForm()) return;
+    
+    if (!validateForm()) {
+      alert('يرجى ملء جميع الحقول المطلوبة بشكل صحيح');
+      return;
+    }
 
+    // Clear previous data
     localStorage.removeItem('formData');
     localStorage.removeItem('orderData');
     localStorage.removeItem('zirkonaCart');
@@ -182,11 +207,15 @@ if (btnSubmit) {
       lastName: Lname.value.trim(),
       email: email.value.trim(),
       phone: phone.value.trim(),
-      message: message.value.trim()
+      message: message ? message.value.trim() : ''
     };
 
     localStorage.setItem('formData', JSON.stringify(formData));
-    alert("Saved Successfully!");
+    
+    // Show success message
+    alert("تم حفظ البيانات بنجاح! سيتم توجيهك لصفحة الأسعار");
+    
+    // Redirect to pricing page
     window.location.href = "pricing.html";
   });
 }
