@@ -146,8 +146,13 @@
     btn.textContent = 'جاري إرسال الطلب...';
 
     try {
-      // Try different API endpoints
-      const endpoints = ['/api/send-order', './api/send-order', 'api/send-order'];
+      // Try different API endpoints (PHP and Node.js)
+      const endpoints = [
+        '/api/send-order.php',
+        '/api/send-order', 
+        './api/send-order.php',
+        'api/send-order.php'
+      ];
       let success = false;
       let lastError = null;
 

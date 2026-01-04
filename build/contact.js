@@ -31,8 +31,13 @@ if (contactForm) {
     btn.textContent = 'جاري الإرسال...';
 
     try {
-      // Try different API endpoints
-      const endpoints = ['/api/send-contact', './api/send-contact', 'api/send-contact'];
+      // Try different API endpoints (PHP and Node.js)
+      const endpoints = [
+        '/api/send-contact.php',
+        '/api/send-contact', 
+        './api/send-contact.php', 
+        'api/send-contact.php'
+      ];
       let response = null;
       let lastError = null;
 
