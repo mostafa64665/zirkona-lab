@@ -146,6 +146,9 @@
             <a href="basic-dashboard.html" class="btn btn-secondary">
                 📊 لوحة المعلومات الأساسية
             </a>
+            <a href="health.php" class="btn btn-secondary">
+                🔍 فحص حالة النظام
+            </a>
         </div>
         
         <div class="info-box">
