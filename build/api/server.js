@@ -17,6 +17,19 @@ app.use(express.json());
 // Serve static files
 app.use(express.static(path.join(__dirname, '../')));
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    env: {
+      EMAIL_USER: process.env.EMAIL_USER ? 'Set' : 'Not Set',
+      EMAIL_PASS: process.env.EMAIL_PASS ? 'Set' : 'Not Set',
+      PORT: process.env.PORT || 'Default'
+    }
+  });
+});
+
 // -----------------------------
 // Send Order
 // -----------------------------
