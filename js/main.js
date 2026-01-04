@@ -157,6 +157,58 @@ function updateCartBadge() {
   }
 }
 
+// Global toast notification function
+function showToast(message, type = 'success') {
+  // Remove existing notifications
+  const existing = document.querySelectorAll('.toast-notification');
+  existing.forEach(toast => toast.remove());
+
+  // Create toast
+  const toast = document.createElement('div');
+  toast.className = `toast-notification fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform translate-x-full transition-all duration-300 max-w-sm ${
+      type === 'success' ? 'bg-green-500 text-white' : 'bg-orange-500 text-white'
+  }`;
+  
+  const icon = type === 'success' 
+      ? `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+         </svg>`
+      : `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"/>
+         </svg>`;
+
+  toast.innerHTML = `
+      <div class="flex items-center gap-3">
+          ${icon}
+          <span class="text-sm font-medium">${message}</span>
+          <button class="close-toast ml-2 hover:bg-white hover:bg-opacity-20 rounded p-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+          </button>
+      </div>
+  `;
+
+  document.body.appendChild(toast);
+
+  // Animate in
+  setTimeout(() => {
+      toast.style.transform = 'translateX(0)';
+  }, 100);
+
+  // Close function
+  const closeToast = () => {
+      toast.style.transform = 'translateX(100%)';
+      setTimeout(() => toast.remove(), 300);
+  };
+
+  // Close button
+  toast.querySelector('.close-toast').addEventListener('click', closeToast);
+
+  // Auto close after 3 seconds
+  setTimeout(closeToast, 3000);
+}
+
 // Appointment form handling
 const Fname = document.getElementById('Fname');
 const Lname = document.getElementById('Lname');

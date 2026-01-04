@@ -49,81 +49,15 @@ function addToCart(name, price, category) {
     const existingItem = cart.find(item => item.name === name);
     if (existingItem) {
         existingItem.quantity += 1;
-        showNotification(`تم زيادة كمية "${name}" في السلة!`, 'success');
+        showToast(`تم زيادة كمية "${name}" في السلة!`, 'success');
     } else {
         cart.push({ name, price, quantity: 1, category });
-        showNotification(`تم إضافة "${name}" للسلة!`, 'success');
+        showToast(`تم إضافة "${name}" للسلة!`, 'success');
     }
 
     localStorage.setItem('zirkonaCart', JSON.stringify(cart));
     saveOrderData();
     updateCartBadge();
-}
-
-// Show beautiful modal popup
-function showNotification(message, type = 'success') {
-    // Remove existing notification
-    const existing = document.querySelector('.notification-modal');
-    if (existing) existing.remove();
-
-    // Create modal backdrop
-    const backdrop = document.createElement('div');
-    backdrop.className = 'notification-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 transition-opacity duration-300';
-    
-    // Create modal content
-    const modal = document.createElement('div');
-    modal.className = 'bg-white rounded-2xl shadow-2xl p-8 mx-4 max-w-md w-full transform scale-95 transition-transform duration-300';
-    
-    const icon = type === 'success' 
-        ? `<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-             <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-             </svg>
-           </div>`
-        : `<div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-             <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-             </svg>
-           </div>`;
-
-    modal.innerHTML = `
-        ${icon}
-        <h3 class="text-xl font-bold text-gray-900 text-center mb-3">
-            ${type === 'success' ? 'تم بنجاح!' : 'تنبيه'}
-        </h3>
-        <p class="text-gray-600 text-center mb-6 leading-relaxed">${message}</p>
-        <button class="close-modal w-full bg-gradient-to-r from-blue-500 to-green-500 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-            حسناً
-        </button>
-    `;
-
-    backdrop.appendChild(modal);
-    document.body.appendChild(backdrop);
-
-    // Animate in
-    setTimeout(() => {
-        backdrop.style.opacity = '1';
-        modal.style.transform = 'scale(1)';
-    }, 10);
-
-    // Close modal function
-    const closeModal = () => {
-        backdrop.style.opacity = '0';
-        modal.style.transform = 'scale(0.95)';
-        setTimeout(() => backdrop.remove(), 300);
-    };
-
-    // Event listeners
-    backdrop.addEventListener('click', (e) => {
-        if (e.target === backdrop) closeModal();
-    });
-    
-    modal.querySelector('.close-modal').addEventListener('click', closeModal);
-
-    // Auto close after 4 seconds for success messages
-    if (type === 'success') {
-        setTimeout(closeModal, 4000);
-    }
 }
 
 // Update cart badge in navigation
