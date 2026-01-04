@@ -157,56 +157,66 @@ function updateCartBadge() {
   }
 }
 
-// Global toast notification function
+// Global toast notification function - Small elegant notifications
 function showToast(message, type = 'success') {
   // Remove existing notifications
   const existing = document.querySelectorAll('.toast-notification');
   existing.forEach(toast => toast.remove());
 
-  // Create toast
+  // Create small elegant toast
   const toast = document.createElement('div');
-  toast.className = `toast-notification fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform translate-x-full transition-all duration-300 max-w-sm ${
-      type === 'success' ? 'bg-green-500 text-white' : 'bg-orange-500 text-white'
+  toast.className = `toast-notification fixed top-6 right-6 z-[9999] px-4 py-3 rounded-xl shadow-2xl transform translate-x-full transition-all duration-500 ease-out max-w-xs ${
+      type === 'success' 
+        ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white' 
+        : type === 'error'
+        ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white'
+        : 'bg-gradient-to-r from-amber-500 to-orange-600 text-white'
   }`;
   
   const icon = type === 'success' 
-      ? `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      ? `<svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
          </svg>`
-      : `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"/>
+      : type === 'error'
+      ? `<svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+         </svg>`
+      : `<svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01"/>
          </svg>`;
 
   toast.innerHTML = `
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
           ${icon}
-          <span class="text-sm font-medium">${message}</span>
-          <button class="close-toast ml-2 hover:bg-white hover:bg-opacity-20 rounded p-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-          </button>
+          <span class="text-sm font-medium leading-tight">${message}</span>
       </div>
   `;
 
   document.body.appendChild(toast);
 
-  // Animate in
+  // Animate in with bounce effect
   setTimeout(() => {
-      toast.style.transform = 'translateX(0)';
+      toast.style.transform = 'translateX(0) scale(1)';
+      toast.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
   }, 100);
 
-  // Close function
+  // Add subtle pulse animation
+  setTimeout(() => {
+      toast.style.transform = 'translateX(0) scale(1.02)';
+      setTimeout(() => {
+          toast.style.transform = 'translateX(0) scale(1)';
+      }, 150);
+  }, 200);
+
+  // Auto close with fade out
   const closeToast = () => {
-      toast.style.transform = 'translateX(100%)';
-      setTimeout(() => toast.remove(), 300);
+      toast.style.transform = 'translateX(100%) scale(0.95)';
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 400);
   };
 
-  // Close button
-  toast.querySelector('.close-toast').addEventListener('click', closeToast);
-
-  // Auto close after 3 seconds
-  setTimeout(closeToast, 3000);
+  // Auto close after 4 seconds
+  setTimeout(closeToast, 4000);
 }
 
 // Appointment form handling
@@ -260,7 +270,7 @@ if (Fname && Lname && email && phone && btnSubmit) {
     e.preventDefault();
     
     if (!validateForm()) {
-      alert('يرجى ملء جميع الحقول المطلوبة بشكل صحيح');
+      showToast('يرجى ملء جميع الحقول المطلوبة بشكل صحيح', 'error');
       return;
     }
 
@@ -280,9 +290,11 @@ if (Fname && Lname && email && phone && btnSubmit) {
     localStorage.setItem('formData', JSON.stringify(formData));
     
     // Show success message
-    alert("تم حفظ البيانات بنجاح! سيتم توجيهك لصفحة الأسعار");
+    showToast("تم حفظ البيانات بنجاح! سيتم توجيهك لصفحة الأسعار", 'success');
     
-    // Redirect to pricing page
-    window.location.href = "pricing.html";
+    // Redirect to pricing page after a short delay
+    setTimeout(() => {
+      window.location.href = "pricing.html";
+    }, 1500);
   });
 }

@@ -93,20 +93,19 @@
 
   // Remove item
   function removeItem(index) {
-    if (confirm('Remove this item from cart?')) {
-      cart.splice(index, 1);
-      localStorage.setItem('zirkonaCart', JSON.stringify(cart));
-      updateCart();
-    }
+    const itemName = cart[index].name;
+    cart.splice(index, 1);
+    localStorage.setItem('zirkonaCart', JSON.stringify(cart));
+    updateCart();
+    showToast(`تم حذف "${itemName}" من السلة`, 'success');
   }
 
   // Clear cart
   function clearCart() {
-    if (confirm('Clear all items from cart?')) {
-      cart = [];
-      localStorage.setItem('zirkonaCart', JSON.stringify(cart));
-      updateCart();
-    }
+    cart = [];
+    localStorage.setItem('zirkonaCart', JSON.stringify(cart));
+    updateCart();
+    showToast('تم مسح جميع المنتجات من السلة', 'success');
   }
 
   // Initial cart render
@@ -123,7 +122,7 @@
     const formData = JSON.parse(localStorage.getItem('formData')) || {};
 
     if (!cart.length) {
-      alert('سلة المشتريات فارغة!');
+      showToast('سلة المشتريات فارغة!', 'error');
       return;
     }
 

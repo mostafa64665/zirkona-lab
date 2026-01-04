@@ -47,8 +47,7 @@ foreach ($products as $product) {
     }
 }
 
-// Email configuration
-$to = 'zirkonalab@gmail.com';
+// Create email content
 $subject = '🎉 New Order (' . count($products) . ' products)';
 
 // Create HTML email content
@@ -95,22 +94,57 @@ $htmlContent .= '
     <p style="margin-top:30px; text-align:center; color:#555; font-size:14px;">Thank you for your order! 🌟</p>
 </div>';
 
-// Email headers
+// Email configuration for Gmail SMTP
+$to = 'zirkonalab@gmail.com';
+$from = 'zirkonalab@gmail.com';
+$fromName = 'Zirkona Lab';
+
+// Email headers for HTML
 $headers = array(
     'MIME-Version: 1.0',
     'Content-type: text/html; charset=UTF-8',
-    'From: zirkonalab@gmail.com',
-    'Reply-To: zirkonalab@gmail.com',
-    'X-Mailer: PHP/' . phpversion()
+    'From: ' . $fromName . ' <' . $from . '>',
+    'Reply-To: ' . $email,
+    'X-Mailer: PHP/' . phpversion(),
+    'X-Priority: 1',
+    'Importance: High'
 );
 
-// Send email
-$mailSent = mail($to, $subject, $htmlContent, implode("\r\n", $headers));
+// Try to send email
+$emailSent = false;
+$errorMessage = '';
 
-if ($mailSent) {
-    echo json_encode(['message' => 'Order sent successfully']);
-} else {
-    http_response_code(500);
-    echo json_encode(['message' => 'Order received but email failed', 'error' => 'Mail function failed']);
+try {
+    // Method 1: Try with mail() function
+    if (mail($to, $subject, $htmlContent, implode("\r\n", $headers))) {
+        $emailSent = true;
+    }
+} catch (Exception $e) {
+    $errorMessage = $e->getMessage();
 }
+
+// Method 2: Always log to file as backup
+$logFile = 'orders_log.txt';
+$logEntry = date('Y-m-d H:i:s') . " - " . $subject . "\n";
+$logEntry .= "Customer: " . $name . " (" . $email . ", " . $phone . ")\n";
+$logEntry .= "Products: " . count($products) . " items, Total: " . $totalAmount . " SAR\n";
+foreach ($products as $product) {
+    $logEntry .= "- " . $product['name'] . " x" . $product['quantity'] . " = " . ($product['price'] * $product['quantity']) . " SAR\n";
+}
+$logEntry .= str_repeat('-', 50) . "\n\n";
+
+try {
+    file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+} catch (Exception $e) {
+    $errorMessage .= ' | File write failed: ' . $e->getMessage();
+}
+
+// Always return success to user
+echo json_encode([
+    'message' => 'Order received successfully',
+    'products' => count($products),
+    'total' => $totalAmount . ' SAR',
+    'email_sent' => $emailSent,
+    'logged' => file_exists($logFile)
+]);
 ?>

@@ -83,7 +83,69 @@ function updateCartBadge() {
 }
 
 document.querySelectorAll('.order-btn').forEach(button => {
-    button.addEventListener('click', () => {
+    // Add hover effects
+    button.addEventListener('mouseenter', () => {
+        button.style.transform = 'translateY(-2px)';
+        button.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+        button.style.transition = 'all 0.3s ease';
+    });
+    
+    button.addEventListener('mouseleave', () => {
+        button.style.transform = 'translateY(0)';
+        button.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+    });
+    
+    // Add click animation
+    button.addEventListener('mousedown', () => {
+        button.style.transform = 'translateY(0) scale(0.98)';
+    });
+    
+    button.addEventListener('mouseup', () => {
+        button.style.transform = 'translateY(-2px) scale(1)';
+    });
+
+    button.addEventListener('click', (e) => {
+        // Add ripple effect
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s ease-out;
+            pointer-events: none;
+        `;
+        
+        // Add ripple animation CSS if not exists
+        if (!document.querySelector('#ripple-style')) {
+            const style = document.createElement('style');
+            style.id = 'ripple-style';
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(2);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        button.style.position = 'relative';
+        button.style.overflow = 'hidden';
+        button.appendChild(ripple);
+        
+        setTimeout(() => ripple.remove(), 600);
+        
         const name = button.dataset.name;
         const price = Number(button.dataset.price);
         const category = button.dataset.category;

@@ -14,14 +14,14 @@ if (contactForm) {
 
     // Validate required fields
     if (!formData.name || !formData.email || !formData.message) {
-      alert('❌ يرجى ملء جميع الحقول المطلوبة');
+      showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
       return;
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      alert('❌ يرجى إدخال بريد إلكتروني صحيح');
+      showToast('يرجى إدخال بريد إلكتروني صحيح', 'error');
       return;
     }
 
@@ -69,14 +69,14 @@ if (contactForm) {
 
       const data = await response.json().catch(() => ({}));
       
-      showToast('تم إرسال الرسالة بنجاح!', 'success');
+      showToast('تم إرسال الرسالة بنجاح! سنتواصل معك قريباً', 'success');
       form.reset();
       
     } catch (err) {
       console.error('Send error:', err);
       
       // Fallback: Show contact info if API fails
-      showToast('عذراً، حدث خطأ في إرسال الرسالة', 'error');
+      showToast('تعذر إرسال الرسالة - يرجى التواصل معنا مباشرة', 'error');
     } finally {
       btn.disabled = false;
       btn.textContent = originalText;

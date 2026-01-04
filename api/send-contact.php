@@ -60,18 +60,38 @@ $htmlContent = '
 $headers = array(
     'MIME-Version: 1.0',
     'Content-type: text/html; charset=UTF-8',
-    'From: zirkonalab@gmail.com',
+    'From: Zirkona Lab <zirkonalab@gmail.com>',
     'Reply-To: ' . $email,
-    'X-Mailer: PHP/' . phpversion()
+    'X-Mailer: PHP/' . phpversion(),
+    'X-Priority: 1',
+    'Importance: High'
 );
 
 // Send email
-$mailSent = mail($to, $subject, $htmlContent, implode("\r\n", $headers));
-
-if ($mailSent) {
-    echo json_encode(['message' => 'Contact message sent successfully']);
-} else {
-    http_response_code(500);
-    echo json_encode(['message' => 'Failed to send contact email', 'error' => 'Mail function failed']);
+$mailSent = false;
+try {
+    $mailSent = mail($to, $subject, $htmlContent, implode("\r\n", $headers));
+} catch (Exception $e) {
+    // Log error but don't fail
 }
+
+// Always log to file as backup
+$logFile = 'contact_log.txt';
+$logEntry = date('Y-m-d H:i:s') . " - Contact from: " . $name . " (" . $email . ")\n";
+$logEntry .= "Phone: " . ($phone ?: 'N/A') . "\n";
+$logEntry .= "Message: " . $message . "\n";
+$logEntry .= str_repeat('-', 50) . "\n\n";
+
+try {
+    file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+} catch (Exception $e) {
+    // Ignore file write errors
+}
+
+// Always return success
+echo json_encode([
+    'message' => 'Contact message received successfully',
+    'email_sent' => $mailSent,
+    'logged' => file_exists($logFile)
+]);
 ?>
